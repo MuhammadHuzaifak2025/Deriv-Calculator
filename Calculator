@@ -1,0 +1,134 @@
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+#include <stdlib.h>
+
+void diplay_poly(int n, float *num, int *ctr);
+void derivation(int deg, float *num, int*);
+void integration(int deg, float *num,int *num_s);
+int main()
+{
+	int choice;
+	int i,n;
+	float *coeff;
+	int deg;
+	int *item;
+	
+	printf("Enter no of terms : ");
+	scanf("%d", &deg);
+	printf("\n");
+	
+	//allocating dynamic memory to deg and coeff arrays
+	coeff = (float*) calloc(deg,sizeof(float));
+	item = (int*) calloc(deg,sizeof(int));
+
+	//getting values for coeffs and degrees
+	for(i = 0; i < deg; i++)
+	{
+		printf("%d. Enter Degree: ",i+1);
+		scanf("%d", &item[i]);
+		printf("%d. Enter co-efficient of X to the power %d: ",i+1, item[i]);
+		scanf("%f", &coeff[i]);
+		printf("\n");
+	}
+		
+	
+	
+	printf("\nOptions\n1.Differentiation\n2.Integration\nChoice: ");
+	scanf("%d", &choice);
+	
+	switch(choice)
+	{
+		case 1:
+			printf("\nEntered polynomial: \nf(x) = ");
+			show_poly(deg,coeff,item);
+			getch();
+			printf("\nDerivative:\nf`(x) = ");
+			derivation(deg,coeff,item);
+			printf("\n");
+			getch();
+			break;
+			
+		case 2:
+			printf("\nEntered Funtion: \nf(x) = ");
+			show_poly(deg,coeff,item);
+			getch();
+			printf("\nIntegral:\nf(x) = ");
+			integration(deg, coeff, item);
+			printf("+ C\n");
+			getch();
+			break;
+						
+		default: 
+			printf("Invalid choice!");
+			return 1;
+	}
+}
+
+void derivation(int deg, float *num,int *num_s)
+// num_s is the number of strings or the item
+{
+	int i;
+	for(i = 0; i < deg; i++)
+	{
+		*(num + i) =(float) *(num + i) *  *(num_s + i);
+		*(num_s + i) = *(num_s + i) - 1;
+	}
+	show_poly(deg,num,num_s);
+	
+}
+
+void integration(int deg, float *number,int *number_s)
+{
+	int i;
+	for(i = 0; i < deg; i++)
+	{
+		number_s[i] = number_s[i] + 1;
+		number[i] = number[i] / number_s[i];
+//		printf("%d%d",number[i],number_s[i]);
+	}
+	
+	show_poly(deg,number,number_s);
+	
+}
+
+void show_poly(int n, float *number,int *ctr)
+{
+	int i;
+	for(i = 0; i <= n; i++)
+	{
+		//condition to check if the coefficient's value is zero to skip 
+		if(number[i] == 0)
+		{
+			continue;
+		}
+		
+		//condition to print + sign
+		else if(number[i] > 0)
+		{
+			if(i != 0)
+			printf(" + ");		
+		}
+		
+		//condition to print - sign
+		else if(number[i] < 0)
+		{
+			printf(" - ");
+		}
+		
+		//condition to check if degree of x is equal to zero	
+		if(ctr[i] == 0)
+		{
+			printf("%.1f",fabs(number[i]));
+			break;
+		}
+		
+		//condition to check if coefficient of x is 1
+		if(number[i] == 1)
+		{
+			printf("X^%d",ctr[i]);
+		}
+		else
+		printf("%.1fX^%d",fabs(number[i]),ctr[i]);	
+	}
+}
